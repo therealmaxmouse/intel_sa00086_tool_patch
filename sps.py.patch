@@ -1,0 +1,24 @@
+--- DIST/sps.py 2017-11-16 02:31:01.000000000 -0500
++++ PATCHED/sps.py      2017-11-22 11:19:10.731394745 -0500
+@@ -7,6 +7,7 @@
+ import subprocess
+ import errno
+ import glob
++from subprocess import PIPE,Popen
+
+ class SPSError(Exception):
+     '''Base class for SPS tool exceptions'''
+@@ -34,9 +35,11 @@
+     '''Run SPSInfo tool'''
+     try:
+         if use_old:
+-            info = subprocess.check_output(["./spsInfoLinux64_3", "-NOCOLORS"]).strip()
++            proc = Popen(["./spsInfoLinux64_3", "-NOCOLORS"], stdout=PIPE)
++            info = proc.communicate()[0]
+         else:
+-            info = subprocess.check_output(["./spsInfoLinux64", "-NOCOLORS"]).strip()
++            proc = Popen(["./spsInfoLinux64", "-NOCOLORS"], stdout=PIPE)
++            info = proc.communicate()[0]
+         #with open("sample.output", 'r') as content_file:
+         #    info = content_file.read()
+         opr_ver = ""
